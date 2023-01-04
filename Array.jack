@@ -1,0 +1,37 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Memory.jack
+
+/**
+ * Represents an array.
+ * In the Jack language, arrays are instances of the Array class.
+ * Once declared, the array entries can be accessed using the usual
+ * syntax arr[i]. Each array entry can hold a primitive data type as 
+ * well as any object type. Different array entries can have different 
+ * data types.
+ */
+class Array {
+    /** Constructs a new Array of the given size. */
+    function Array new(int size) {
+        var Array array;
+        var int i;
+        // allocate memory for the Array object and for the array itself
+        let array = Memory.alloc(size);
+        // set the array size
+        // initialize the array entries to 0
+        let i = 0;
+        while (i < size)
+        {
+            let array[i] = 0;
+            let i = i + 1;
+        }
+        return array;
+    }
+
+    /** Disposes this array. */
+    method void dispose() {
+    do Memory.deAlloc(this);
+    return;
+    }
+}

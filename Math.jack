@@ -1,0 +1,341 @@
+// This file is part of nand2tetris, as taught in The Hebrew University, and
+// was written by Aviv Yaish. It is an extension to the specifications given
+// [here](https://www.nand2tetris.org) (Shimon Schocken and Noam Nisan, 2017),
+// as allowed by the Creative Common Attribution-NonCommercial-ShareAlike 3.0
+// Unported [License](https://creativecommons.org/licenses/by-nc-sa/3.0/).
+
+/**
+ * A library of commonly used mathematical functions.
+ * Note: Jack compilers implement multiplication and division using OS method calls.
+ */
+class Math {
+        /** Initializes the library. */
+        static int bit_arr;
+        function void init() {
+        let bit_arr = Array.new(16);
+        let bit_arr[0] = 1;
+        let bit_arr[1] = 2;
+        let bit_arr[2] = 4;
+        let bit_arr[3] = 8;
+        let bit_arr[4] = 16;
+        let bit_arr[5] = 32;
+        let bit_arr[6] = 64;
+        let bit_arr[7] = 128;
+        let bit_arr[8] = 256;
+        let bit_arr[9] = 512;
+        let bit_arr[10] = 1024;
+        let bit_arr[11] = 2048;
+        let bit_arr[12] = 4096;
+        let bit_arr[13] = 8192;
+        let bit_arr[14] = 16384;
+        let bit_arr[15] = 16384 + 16384;
+        return;
+    }
+
+    function boolean i_bit(int x, int i){
+        var boolean bitt;
+        let bitt =~((x & bit_arr[i]) = 0);
+        return bitt;
+    }
+
+        /** Returns the absolute value of x. */
+        function int abs(int x)
+        {
+            if (x < 0)
+            {
+                    return -x;
+            }
+            return x;
+        }
+
+        /** 
+         * Returns the product of x and y. 
+         * When a Jack compiler detects the multiplication operator '*' in the 
+         * program's code, it handles it by invoking this method. In other words,
+         * the Jack expressions x*y and multiply(x,y) return the same value.
+         */
+        function int multiply(int x, int y) {
+        /**
+            // Pseudocode:
+            // 1. let sum = 0
+            // 2. let shiftedx = x
+            // 3. for i = 0 ... n-1 do
+            // 4.   if ((i-th bit of y) == 1)
+            // 5.      let sum = sum + shiftedx
+            // 6.   let shiftedx = 2shiftedx
+            // 7. return sum
+        */
+            var int sum, shiftedx, i;
+            let sum=0;
+            let shiftedx = x;
+            let i=0;
+            while (i<16){
+                 if (Math.i_bit(y,i))
+                 {
+                    let sum = sum + shiftedx;
+                 }
+                 let shiftedx = shiftedx + shiftedx;
+                 let i=i+1;
+            }
+            return sum;
+        }
+
+        /** 
+         * Returns the integer part of x/y.
+         * When a Jack compiler detects the multiplication operator '/' in the 
+         * program's code, it handles it by invoking this method. In other words,
+         * the Jack expressions x/y and divide(x,y) return the same value.
+         */
+        function int divide(int x, int y) {
+        /**
+            // This should be implemented without using multiplication.
+            // Hint: updating the value of 2*q*y in the "if" statement requires
+            // at most a single addition operator at every recursion step.
+            // Pseudocode:
+            // 1. i1f (y > x) return 0
+            // 2. let q = divide(x, 2*y)
+            // 3. i1f ((x - 2*q*y) < y)
+            // 4.   return 2*q
+            // 5. el1se
+            // 6.   return 2*q + 1
+        */
+            var boolean x_pos, y_pos, x_y_pos;
+            var int q,sign,abs_x,abs_y;
+            let abs_x = Math.abs(x);
+            let abs_y = Math.abs(y);
+            let x_pos= (x>-1);
+            let y_pos = (y>-1);
+            let x_y_pos = (x_pos=y_pos);
+            if (x_y_pos)
+            {
+            let sign = 1;
+            }
+            else
+            {let sign=-1;}
+
+
+            if (abs_y>abs_x)             {return 0;}
+            let q=Math.divide(abs_x,(abs_y+abs_y));
+            if ((abs_x - ((q+q)*abs_y)) < y)
+            {
+
+            return Math.multiply(sign,Math.abs(q+q));
+            }
+            else
+            {
+            return Math.multiply(sign,Math.abs(q+q+1));
+            }
+        }
+
+        function int power(int x, int i)
+        {
+            var int j,sum;
+            let sum = x;
+
+            while(i > 1)
+            {
+                let sum = Math.multiply(sum, x);
+                let i=i-1;
+            }
+            return sum;
+        }
+
+        /** Returns the integer part of the square root of x. */
+        function int sqrt(int x) {
+            // This should be implemented without using multiplication or division.
+            // Pseudocode (where '**' is the mathematical power function):
+            // 1. let y = 0
+            // 2. for j = (n/2 - 1) ... 0 do
+            // 3.   if ((y + 2**j)**2 <= x) then let y = y + 2**j
+            // 4. return y
+            var int result,j, temp;
+            let j = 7;
+            let result=0;
+            while(j>-1)
+            {
+                let temp = (result + bit_arr[j]) * (result + bit_arr[j]);
+                if(~(temp > x) & (temp > 0) ){
+                    let result = result + bit_arr[j];
+                }
+                let j = j-1;
+            }
+            return result;
+        }
+
+        /** Returns the greater number. */
+        function int max(int a, int b) {
+        if (a + 1 > b) {
+            return a ;
+        }
+        return b;
+        }
+
+        /** Returns the smaller number. */
+        function int min(int a, int b) {
+        if (a < (b+1)) {
+            return a;
+        }
+        return b;
+        }
+    }
+
+
+
+//        function add_i_to_bin(Array bin, int i){
+//        var int j,k;
+//        if (i=0){
+//            return bin;
+//            }
+//        let j=0;
+//        let k=0;
+//
+//        while (k<16){
+//            if (bin[k] = 0){
+//                while (j!=k){
+//                    bin[k]=0;
+//                    let j = j+1;
+//                }
+//                return add_i_to_bin(bin,i-1)
+//
+//            }
+//            let k=k+1;
+//        }
+//
+//
+//        }
+//        function Array num_to_bin16bit(num) {
+//        /**
+//            * Converts a number to a 16-bit binary number.
+//        */
+//            var int i;
+//            var Array bin;
+//            var boolean positive;
+//            let bin = Array.new(16);
+//            let i = 0;
+//            if (num<0)
+//            {
+//                    let positive = false;
+//                    let num = -num;
+//             }
+//            else
+//            {
+//                    let positive = true;
+//            }
+//
+//            while (i<16){
+//                let bin[i]=0
+//                let i=i+1;
+//            }
+//            let i=15;
+//            while (i > -1) {
+//                if (num-bin_symbols[i] > -1) {
+//                    let num = num-bin_symbols[i];
+//                    let bin[i] = 1;
+//                }
+//            }
+//            if (positive = false) {
+//                let bin = bin_not(bin);
+//                let bin = bin_add(bin,1);
+//            }
+//            return bin;
+//
+//        }
+//        function Array bin_not(Array bin) {
+//        /**
+//            * Performs a bitwise not on a 16-bit binary number.
+//        */
+//        var int i;
+//        let i = 0;
+//        while (i<16) {
+//            if (bin[i] = 0) {
+//                let bin[i] = 1;
+//            }
+//            else {
+//                let bin[i] = 0;
+//            }
+//            let i = i+1;
+//        }
+//        return bin;
+//        }
+//        function Array bin_add(Array bin1, Array bin2) {
+//        /**
+//            * Performs a bitwise addition on two 16-bit binary numbers.
+//        */
+//        var int i;
+//        var int carry;
+//        var Array bin;
+//        let bin = Array.new(16);
+//        let i = 15;
+//        let carry = 0;
+//        while (i > -1) {
+//            if (bin1[i] = 0 & bin2[i] = 0) {
+//                if (carry = 0) {
+//                    let bin[i] = 0;
+//                }
+//                else {
+//                    let bin[i] = 1;
+//                    let carry = 0;
+//                }
+//            }
+//            else if (bin1[i] = 1 & bin2[i] = 1) {
+//                if (carry == 0) {
+//                    let bin[i] = 0;
+//                    let carry = 1;
+//                }
+//                else {
+//                    let bin[i] = 1;
+//                }
+//            }
+//            else {
+//                if (carry = 0) {
+//                    let bin[i] = 1;
+//                }
+//                else {
+//                    let bin[i] = 0;
+//                }
+//            }
+//            let i = i-1;
+//        }
+//        return bin;
+//        }
+//        function int bin_to_dec16bit(Array bit) {
+//        /**
+//         a function that converts a 16 bit binary number to decimal
+//         */
+//        var int i, dec;
+//        var boolean positive;
+//        if (bit[15] = 1){
+//            let positive = false
+//            let bin = bin_add(bin,-1);
+//            let bin = bin_not(bin);
+//        }
+//        else{
+//            let positive = true
+//        }
+//        let dec = 0;
+//        let i = 0;
+//        if
+//        while (i < 16) {
+//            if (bit[i] == 1) {
+//                let dec = dec + bin_symbols[i];
+//            }
+//            let i = i + 1;
+//        }
+//
+//        return dec;
+//    }
+//        function i_bit(int num, int i)  {
+//        /**
+//         * Returns the i-th bit of num.
+//         */
+//        var int bit;
+//        let bit = num_to_bin16bit(num)[i];
+//        return bit;
+//        /** Returns the absolute value of x. */
+//        function int abs(int x) {
+//        if (x < 0) {
+//                return -x;
+//        }
+//        return x;
+//        }
+//        }
