@@ -1,0 +1,240 @@
+
+class Screen {
+        static Array screen;
+        static int map;
+        static int bit_arr;
+
+        static boolean color;
+        /** Initializes the Screen. */
+        function void init() {
+        let screen=16384;
+        let map = 8192; //optional 8161
+        let color=true;
+        let bit_arr = Array.new(16);
+        let bit_arr[0] = 1;
+        let bit_arr[1] = 2;
+        let bit_arr[2] = 4;
+        let bit_arr[3] = 8;
+        let bit_arr[4] = 16;
+        let bit_arr[5] = 32;
+        let bit_arr[6] = 64;
+        let bit_arr[7] = 128;
+        let bit_arr[8] = 256;
+        let bit_arr[9] = 512;
+        let bit_arr[10] = 1024;
+        let bit_arr[11] = 2048;
+        let bit_arr[12] = 4096;
+        let bit_arr[13] = 8192;
+        let bit_arr[14] = 16384;
+        let bit_arr[15] = 16384 + 16384;
+        return;
+        }
+
+    function boolean i_bit(int x, int i){
+        var boolean bitt;
+        let bitt =~((x & bit_arr[i]) = 0);
+        return bitt;
+    }
+
+        /** Erases the entire screen. */
+        function void clearScreen() {
+              var int i;
+              let i=0;
+               while (i < map)
+               {
+                    let screen[i] = 0;
+                    let i = i + 1;
+               }
+               return;
+        }
+
+        /** Sets the current color, to be used for all subsequent drawXXX commands.
+         *    Black is represented by true, white by false. */
+        function void setColor(boolean b) {
+            let color=b;
+            return;
+
+        }
+
+        /** Draws the (x,y) pixel, using the current color. */
+        function void drawPixel(int x, int y) {
+            // For this function, you will need to calculate the value x%16.
+            // It should be calculated quickly without using multiplication or
+            // division, using exactly one basic math/logical operation.
+            // In addition, calculating 16384 + y * 32 + x/16 should not use
+            // division or multiplication.
+            // Pseudocode:
+            // 1. Compute the RAM address where the (x,y) pixel is
+            //    represented: 16384 + (32*y) + (x/16).
+            // 2. Use Memory.peek to get the 16-bit value of this address
+            // 3. Use some bitwise operation to set (only) the bit that corresponds
+            //    to the pixel to the current color.
+            // 4. Use Memory.poke to write the modified 16-bit value to the RAM
+            // address.
+            var int address,temp;
+
+            let address = (y*32) + (x/16);
+            let temp = bit_arr[x & 15];
+            if (color)
+            {
+                let screen[address] = screen[address] | temp;
+            }
+            else
+            {
+                let screen[address] = screen[address] & ~temp;
+            }
+            return;
+        }
+
+
+
+
+        /** Draws a line from pixel (x1,y1) to pixel (x2,y2), using the current color. */
+        function void drawLine(int x1, int y1, int x2, int y2) {
+            // The case where x1 != x2 and y1 != y2 should be implemented without
+            // multiplication or division.
+            // Pseudocode:
+            // 1. let x = x1, y = y1, a = 0, b = 0, diff = 0
+            // 2. Compute dx and dy
+            // 3. while ((a <= dx) and (b <= dy))
+            // 4.   do drawPixel(x+a, y+b)
+            // 5.   if (diff < 0) { let a=a+1, diff=diff+dy }
+            // 6.   else          { let b=b+1, diff=diff-dx }
+            //
+            // The case where y1 == y2 can be implemented efficiently by
+            // trying to draw as many pixels as possible in a single assignment,
+            // similarly to Fill in project 4.
+            var int x,y,a,b,diff,dx,dy;
+            if (y1 = y2)
+            {
+                let a = Math.min(x1,x2);
+                let b= Math.max(x1,x2);
+                while (~(a=b))
+                {
+                    do Screen.drawPixel(a,y1);
+                    let a=a+1;
+                }
+                return;
+            }
+
+            if (x2 = x1)
+            {
+                let a = Math.min(y1,y2);
+                let b= Math.max(y1,y2);
+                while (~(a=b))
+                {
+                    do Screen.drawPixel(x1,a);
+                    let a=a+1;
+                }
+                return;
+            }
+
+
+            if ((x2>x1) & (y2>y1))
+            {
+                do Screen.drawToRightUp(x1,y1,x2,y2);
+                return;
+            }
+
+            if ((x2<x1) & (y2<y1))
+            {
+                do Screen.drawToLeftDown(x1,y1,x2,y2);
+                return;
+            }
+
+            if((x2>x1) & (y2<y1))
+            {
+                do Screen.drawToRightDown(x1,y1,x2,y2);
+                return;
+            }
+            do Screen.drawToRightDown(x2,y2,x1,y1);
+            return;
+        }
+
+
+
+
+
+
+        /** Draws a filled rectangle whose top left corner is (x1, y1)
+         * and bottom right corner is (x2,y2), using the current color. */
+        function void drawRectangle(int x1, int y1, int x2, int y2) {
+        return;
+        }
+
+        /** Draws a filled circle of radius r<=181 around (x,y), using the current color. */
+        function void drawCircle(int x, int y, int r) {
+            // This can be implemented efficiently by drawing multiple lines at
+            // each iteration. You can use multiplication and sqrt.
+            // Pseudocode:
+            // 1. for (dy = -r ... r)
+            // 2.   let halfWidth = sqrt(r*r - dy*dy)
+            // 3.   do drawLine(x-halfWidth, y+dy, x+halfWidth, y+dy)
+            return;
+        }
+
+
+
+                function void drawToRightUp(int x1,int y1,int x2,int y2)
+        {
+            var int x,y,a,b,diff,dx,dy;
+        //add to x1, add to y1
+            let x = x1;
+            let y = y1;
+            let a = 0;
+            let b = 0;
+            let diff = 0;
+            let dx = x2 - x1;
+            let dy = y2 - y1;
+            while ((a < (dx+1)) & (b < (dy+1)))
+            {
+                do Screen.drawPixel(x+a, y+b);
+                if (diff < 0)
+                {
+                    let a=a+1;
+                    let diff=diff+dy;
+                }
+                else
+                {
+                    let b=b+1;
+                    let diff=diff-dx;
+                }
+            }
+            return;
+        }
+
+        function void drawToLeftDown(int x1,int y1,int x2,int y2)
+        {
+            do Screen.drawToRightUp(x2,y2,x1,y1);
+            return;
+        }
+
+
+        function void drawToRightDown(int x1,int y1,int x2,int y2)
+        {
+            var int x,y,a,b,diff,dx,dy;
+        //add to x1, add to y1
+            let x = x1;
+            let y = y1;
+            let a = 0;
+            let b = 0;
+            let diff = 0;
+            let dx = x2 - x1;
+            let dy = y2 - y1;
+            while ((a < (dx+1)) & (b > (dy-1)))
+            {
+                do Screen.drawPixel(x+a, y+b);
+                if (diff < 0)
+                {
+                    let a=a+1;
+                    let diff=diff-dy;
+                }
+                else
+                {
+                    let b=b-1;
+                    let diff=diff-dx;
+                }
+            }
+            return;
+        }
+}
