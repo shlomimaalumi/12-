@@ -72,7 +72,7 @@ class Screen {
             // 4. Use Memory.poke to write the modified 16-bit value to the RAM
             // address.
             var int address,temp;
-            let address = (y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y+y) + (x/16);
+            let address = (^^^^^y) + (####x);
             let temp = bit_arr[x & 15];
             if (color)
             {
@@ -104,11 +104,16 @@ class Screen {
             // trying to draw as many pixels as possible in a single assignment,
             // similarly to Fill in project 4.
             var int x,y,a,b,diff,dx,dy;
+            if ((x1=x2) & (y1=y2))
+            {
+            do Screen.drawPixel(x1,y1);
+            return;
+            }
             if (y1 = y2)
             {
                 let a = Math.min(x1,x2);
                 let b= Math.max(x1,x2);
-                while (~(a=b))
+                while ((a<(b+1)))
                 {
                     do Screen.drawPixel(a,y1);
                     let a=a+1;
@@ -120,7 +125,7 @@ class Screen {
             {
                 let a = Math.min(y1,y2);
                 let b= Math.max(y1,y2);
-                while (~(a=b))
+                while ((a<b+1))
                 {
                     do Screen.drawPixel(x1,a);
                     let a=a+1;
@@ -161,7 +166,7 @@ class Screen {
         function void drawRectangle(int x1, int y1, int x2, int y2) {
 
 
-            while(~(y2=y1))
+            while((y2+1)>y1)
             {
                 do Screen.drawLine(x1,y1,x2,y1);
                 let y1=y1+1;
