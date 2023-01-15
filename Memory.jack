@@ -47,7 +47,7 @@ class Memory {
         // 1. Search freeList using best-fit or first-fit heuristics to obtain
         //    a segment with segment.length > size.
         //    If no such segment is found, return -1.
-        // 2. block = needed part of the found segment (or all of it, if the 
+        // 2. block = needed part of the found segment (or all of it, if the
         //            segment remainder is too small).
         // 3. block[-1] = size + 1 // Remember block size, for de-allocation
         // 4. Update freeList to reflect the allocation
@@ -92,19 +92,20 @@ class Memory {
         // Pseudocode:
         // 1. segment = o - 1
         // 2. Insert segment into the freeList
-        var int temp,temp2;
-        let temp2 = o-2; //get the adress of the memory block
-        let temp = freeList[0];  // get the next adress of the free list
-        let freeList[0]=temp2; // set the list to point to the new memory block
-        let temp2[0]=temp; // set the next of the new memory block to the next of the free list
+        var int next,o_block;
+        let o_block = o-2; //get the adress of the memory block 2050
+        let next = freeList[0];  // get the next adress of the free list 2082
+        let freeList[0]=o_block; // set the list to point to the new memory block
+        let o_block[0]=next; // set the next of the new memory block to the next of the free list
         return;
-    }    
 
-    /** Returns the maximal element contained in the given Array/object. 
+    }
+
+    /** Returns the maximal element contained in the given Array/object.
      *  Assume inputs are initialized and contain at least one element. */
     function int max(Array o) {
         // Hint: the algorithm you need to implement in Memory.alloc saves the
-        // size of the allocated block in the memory cell right before the 
+        // size of the allocated block in the memory cell right before the
         // start of the block, and this can be used to implement Memory.max.
         var int max,i, temp;
         let max=-1;

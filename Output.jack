@@ -19,10 +19,19 @@
 class Output {
 
     // Character map for displaying characters
-    static Array charMaps; 
+    static Array charMaps,ram, charMasks,screen;
+    static int cursorx,cursory;
 
     /** Initializes the screen, and locates the cursor at the screen's top-left. */
     function void init() {
+    let screen = 16384;
+    let charMasks = Array.new(2);
+    let charMasks[0] = 255;
+    let charMasks[1] = -1 & 255;
+    let cursorx=0;
+    let cursory=0;
+    do Output.initMap();
+    return;
     }
 
     // Initializes the character map array
@@ -73,7 +82,7 @@ class Output {
         do Output.create(64,30,51,51,59,59,59,27,3,30,0,0);  // @
         do Output.create(63,30,51,51,24,12,12,0,12,12,0,0);  // ?
 
-        do Output.create(65,0,0,0,0,0,0,0,0,0,0,0);          // A ** TO BE FILLED **
+        do Output.create(65,12,30,51,51,63,51,51,51,51,0,0); // A
         do Output.create(66,31,51,51,51,31,51,51,51,31,0,0); // B
         do Output.create(67,28,54,35,3,3,3,35,54,28,0,0);    // C
         do Output.create(68,15,27,51,51,51,51,51,27,15,0,0); // D
@@ -148,7 +157,7 @@ class Output {
 	var Array map;
 
 	let map = Array.new(11);
-        let charMaps[index] = map;
+    let charMaps[index] = map;
 
         let map[0] = a;
         let map[1] = b;
@@ -178,30 +187,100 @@ class Output {
     /** Moves the cursor to the j-th column of the i-th row,
      *  and erases the character displayed there. */
     function void moveCursor(int i, int j) {
+    let cursorx=j;
+    let cursory=i;
+    return;
     }
 
-    /** Displays the given character at the cursor location,
-     *  and advances the cursor one column forward. */
+  /** Prints c at the cursor location and advances the cursor one
+     *  column forward. */
     function void printChar(char c) {
-        // Your implementation should be as efficient as possible.
-        // For example, you can draw multiple pixels at once, for each row.
+        var Array map2;
+        var int address;
+        var int temp;
+        var int bitval;
+        var int i;
+
+        let map2 = Output.getMap(c);
+        let address = (cursory*32*11) + (cursorx/2);
+        let temp = cursorx & 1;
+        let i = 0;
+        while( i < 11 )
+        {
+            let bitval = map2[i];
+            if (temp = 1 )
+            {
+                let bitval = bitval * 256;
+            }
+            let screen[address] = screen[address] & charMasks[temp] | bitval;
+            let address = address + 32;
+            let i = i + 1;
+        }
+
+            if( cursorx = 63 ) {
+            do Output.println();
+        }
+        else {
+            let cursorx = cursorx + 1;
+        }
+        return;
     }
 
     /** displays the given string starting at the cursor location,
      *  and advances the cursor appropriately. */
-    function void printString(String s) {
+    function void printString(String s)
+    {
+        var int i;
+        let i=0;
+        while (i<s.length())
+        {
+            do Output.printChar(s.charAt(i));
+            let i=i+1;
+        }
+        return;
     }
 
     /** Displays the given integer starting at the cursor location,
      *  and advances the cursor appropriately. */
-    function void printInt(int i) {
+    function void printInt(int i)
+    {
+        var String str;
+        let str=String.new(17);
+        do str.setInt(i);
+        do Output.printString(str);
+        do str.dispose();
+        return;
+
     }
 
     /** Advances the cursor to the beginning of the next line. */
     function void println() {
+        let cursorx = 0;
+        if( cursory < 22 )
+        {
+            let cursory = cursory + 1;
+        }
+        else
+         {
+            let cursory=0;
+        }
+        return;
     }
 
     /** Moves the cursor one column back. */
     function void backSpace() {
+        if( cursorx = 0 ) {
+            if( ~(cursory = 0) )
+            {
+                let cursorx = 63;
+                let cursory = cursory - 1;
+            }
+        }
+        else
+        {
+            let cursorx = cursorx - 1;
+        }
+
+        return;
     }
 }

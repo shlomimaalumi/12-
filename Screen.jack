@@ -106,8 +106,8 @@ class Screen {
             var int x,y,a,b,diff,dx,dy;
             if ((x1=x2) & (y1=y2))
             {
-            do Screen.drawPixel(x1,y1);
-            return;
+                do Screen.drawPixel(x1,y1);
+                return;
             }
             if (y1 = y2)
             {
@@ -125,7 +125,7 @@ class Screen {
             {
                 let a = Math.min(y1,y2);
                 let b= Math.max(y1,y2);
-                while ((a<b+1))
+                while (a<(b+1))
                 {
                     do Screen.drawPixel(x1,a);
                     let a=a+1;
@@ -164,11 +164,18 @@ class Screen {
         /** Draws a filled rectangle whose top left corner is (x1, y1)
          * and bottom right corner is (x2,y2), using the current color. */
         function void drawRectangle(int x1, int y1, int x2, int y2) {
-
+            var int a,b;
 
             while((y2+1)>y1)
             {
-                do Screen.drawLine(x1,y1,x2,y1);
+                let a=x1;
+                let b=x2;
+                while ((a<(b+1)))
+                {
+                    do Screen.drawPixel(a,y1);
+                    let a=a+1;
+                }
+//                do Screen.drawLine(x1,y1,x2,y1);
                 let y1=y1+1;
             }
         return;

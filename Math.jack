@@ -10,7 +10,7 @@
  */
 class Math {
         /** Initializes the library. */
-        static int bit_arr;
+        static Array bit_arr;
         function void init() {
         let bit_arr = Array.new(16);
         let bit_arr[0] = 1;
