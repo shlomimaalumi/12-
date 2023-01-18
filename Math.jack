@@ -141,26 +141,97 @@ class Math {
         }
 
         /** Returns the integer part of the square root of x. */
-        function int sqrt(int x) {
-            // This should be implemented without using multiplication or division.
-            // Pseudocode (where '**' is the mathematical power function):
-            // 1. let y = 0
-            // 2. for j = (n/2 - 1) ... 0 do
-            // 3.   if ((y + 2**j)**2 <= x) then let y = y + 2**j
-            // 4. return y
-            var int result,j, temp;
-            let j = 7;
-            let result=0;
-            while(j>-1)
-            {
-                let temp = (result + bit_arr[j]) * (result + bit_arr[j]);
-                if(~(temp > x) & (temp > 0) ){
-                    let result = result + bit_arr[j];
-                }
-                let j = j-1;
-            }
-            return result;
-        }
+//        function int sqrt(int x) {
+//            // This should be implemented without using multiplication or division.
+//            // Pseudocode (where '**' is the mathematical power function):
+//            // 1. let y = 0
+//            // 2. for j = (n/2 - 1) ... 0 do
+//            // 3.   if ((y + 2**j)**2 <= x) then let y = y + 2**j
+//            // 4. return y
+//            var int result,j, temp;
+//            let j = 7;
+//            let result=0;
+//            while(j>-1)
+//            {
+//                let temp = (result + bit_arr[j]) * (result + bit_arr[j]);
+//                if(~(temp > x) & (temp > 0) ){
+//                    let result = result + bit_arr[j];
+//                }
+//                let j = j-1;
+//            }
+//            return result;
+//        }
+
+
+
+      function int sqrt(int n) {
+      var int x,c,d;
+      let x=n;
+      let c=0;
+      let d=16384;
+      while (d>n)
+      {
+        let d = #d;
+        let d = #d;
+      }
+      while (~(d=0))
+      {
+          if (~(x < (c + d)))
+          {
+              let x = x - c - d;
+              let c = (#c);
+              let c = c + d;
+          }
+          else
+          {
+             let c = #c;
+          }
+      let d = ##d;
+
+
+      }
+      return c;
+      }
+
+
+
+
+
+//        function int sqrt(int x)
+//        {
+//            var int res, bit;
+//            if (x < 1)
+//            {
+//                return 0;
+//            }
+//            if (x = 1)
+//            {
+//                return 1;
+//            }
+//            let res = 0;
+//            let bit = ^^^^^^^^^^^^^^^1;;
+//            while (bit > x)
+//            {
+//                bit = 2;
+//            }
+//            while (~(bit = 0))
+//            {
+//                if x >= res + bit:
+//                    x -= res + bit
+//                    res = (res >> 1) + bit
+//                else:
+//                    res >>= 1
+//                bit >>= 2
+//            }
+//            return res;
+//        }
+
+
+
+
+
+
+
 
         /** Returns the greater number. */
         function int max(int a, int b) {
@@ -194,7 +265,7 @@ class Math {
 //                while (j!=k){
 //                    bin[k]=0;
 //                    let j = j+1;
-//                }
+//                }8
 //                return add_i_to_bin(bin,i-1)
 //
 //            }
