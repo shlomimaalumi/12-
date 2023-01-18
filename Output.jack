@@ -226,7 +226,8 @@ class Output {
             let i = i + 1;
         }
 
-            if( cursorx = 63 ) {
+        if( cursorx = 63 )
+        {
             do Output.println();
         }
         else {
